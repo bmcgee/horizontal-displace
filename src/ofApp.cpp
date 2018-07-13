@@ -2,6 +2,10 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    
+    cam.setFarClip(10000);
+    cam.setNearClip(0);
+    
 	ofBackground(ofColor::white);
 	
 	imageMap.load("joel2.png");
@@ -17,17 +21,16 @@ void ofApp::setup(){
 	
 	for (int y=0; y<(rows); y++) {
 		ofPath path;
-		path.moveTo(0, y, 0);
+		path.moveTo(0, y*yScalar, 0);
 		for (int x=1; x<(cols); x++) {
 			//ofColor c = imageMap.getColor((x*xScalar),(y*yScalar));
 			ofColor c = imageMap.getColor(x,y);
 
 			float z = c.getLightness();
 			z = ofMap(z, 0, 255, 0, 10);
-			path.lineTo(x, y, (z));
+			path.lineTo(x*xScalar, y*yScalar, (z));
 		}
 		path.setStrokeColor(ofColor::black);
-		path.setFillColor(ofColor::white);
 		path.setFilled(false);
 		path.setStrokeWidth(1);
 		paths.push_back(path);
@@ -42,13 +45,15 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    
+    
 	cam.begin();
-	cam.setFarClip(1000);
-	cam.setNearClip(0);
-	for (int i=0; i < paths.size(); i++) {
-		paths[i].draw();
-	}
-	//path.draw();
+        ofPushMatrix();
+            ofTranslate(-500, -500);
+                for (int i=0; i < paths.size(); i++) {
+                    paths[i].draw();
+                }
+        ofPopMatrix();
 	cam.end();
 }
 
